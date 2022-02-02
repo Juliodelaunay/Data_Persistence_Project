@@ -6,12 +6,20 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     private Rigidbody m_Rigidbody;
+    public AudioSource audiosource;
 
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
     }
     
+    private void OnCollisionEnter(Collision other)
+    {
+        audiosource.Play();
+    }
+
+
+
     private void OnCollisionExit(Collision other)
     {
         var velocity = m_Rigidbody.velocity;
