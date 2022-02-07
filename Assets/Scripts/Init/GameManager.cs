@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
        public static GameManager Instance;
        public static string input;
+       public static int maxScore;
+       public static string namePlayer;
+       
        
 
       private void Awake()
@@ -45,4 +49,35 @@ public class GameManager : MonoBehaviour
         input=s;
         Debug.Log(input);
     }
+
+    [System.Serializable]
+    class SaveData
+{
+    public string NamePlayer;
+    public int MaxScore;
+}
+
+    public static void SaveName()
+{
+    SaveData data = new SaveData();
+    data.NamePlayer = MainManager.maxPlayer ;
+    data.MaxScore = MainManager.maxScore;
+    string json = JsonUtility.ToJson(data);
+  
+    File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+}
+
+public static void LoadName()
+{
+    string path = Application.persistentDataPath + "/savefile.json";
+    if (File.Exists(path))
+    {
+        string json = File.ReadAllText(path);
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        namePlayer = data.NamePlayer;
+        maxScore = data.MaxScore;
+    }
+}
+
 }

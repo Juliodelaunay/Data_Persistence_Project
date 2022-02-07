@@ -11,22 +11,26 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text maxScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
     
     private bool m_GameOver = false;
+    public static string maxPlayer;
+    public static int maxScore;
     
   
 
     
     // Start is called before the first frame update
     void Start()
-    {   
-
-        ScoreText.text = GameManager.input +  $"   Score : {m_Points}" ;
-
+    {   GameManager.LoadName();
+        
+         ScoreText.text = GameManager.input +  $"   Score : {m_Points}" ;
+         //maxScoreText.text = GameManager.input +  $"   Best Score : {m_Points}" ;
+         maxScoreText.text = GameManager.namePlayer +  $"   Best Score : "+ GameManager.maxScore +" " ;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -45,6 +49,8 @@ public class MainManager : MonoBehaviour
 
     private void Update()
     {
+      // maxScoreText.text = GameManager.input +  $"   Best Score : {m_Points}" ;
+
         if (!m_Started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -73,9 +79,25 @@ public class MainManager : MonoBehaviour
         ScoreText.text = GameManager.input +  $"   Score : {m_Points}" ;
     }
 
-    public void GameOver()
+     void MaxScore(int point)
     {
+        m_Points += point;
+        maxScoreText.text = GameManager.input +  $"   Score : {m_Points}" ;
+        
+    }
+
+    public void GameOver()
+    {  
         m_GameOver = true;
         GameOverText.SetActive(true);
+        if(m_Points > GameManager.maxScore)
+        {
+            maxScore=m_Points;
+            maxPlayer=GameManager.input;
+            GameManager.SaveName();
+        }
+        Debug.Log(GameManager.maxScore + GameManager.input);
+        
+        
     }
 }
